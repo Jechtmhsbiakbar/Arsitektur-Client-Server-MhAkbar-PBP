@@ -1,8 +1,10 @@
+// ============================================================
+// 🛒 DATA FETCHING
+// ============================================================
 fetch("api-toko/get_barang.php")
   .then((response) => response.json())
   .then((responseObject) => {
     const dataBarang = responseObject.data;
-
     const tbody = document.getElementById("isi-tabel");
     let baris = "";
 
@@ -17,86 +19,78 @@ fetch("api-toko/get_barang.php")
             </td>
         </tr>`;
     });
-
     tbody.innerHTML = baris;
   })
-  .catch((error) => {
-    console.error("Gagal memuat data:", error);
-  });
+  .catch((error) => console.error("Gagal memuat data:", error));
 
 // ============================================================
-// ✅ PWA: Registrasi Service Worker
+// 🛠️ SERVICE WORKER REGISTRATION
 // ============================================================
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker
-      .register("sw.js")
-      .then((registration) => {
-        console.log("✅ Service Worker Berhasil Didaftarkan!", registration.scope);
-      })
-      .catch((err) => {
-        console.error("❌ Service Worker Gagal:", err);
-      });
+    navigator.serviceWorker.register("sw.js")
+      .then((reg) => console.log("✅ SW Terdaftar:", reg.scope))
+      .catch((err) => console.error("❌ SW Gagal:", err));
   });
 }
 
-// ... kode fetch data barang tetap sama di sini ...
-
 // ============================================================
-// ✅ LOGIKA CEK INSTALASI & DIALOG
+// 📲 LOGIKA PWA (OVERLAY & BANNER)
 // ============================================================
-
 let deferredPrompt;
 const overlay = document.getElementById("pwa-overlay");
+const banner = document.getElementById("pwa-banner");
 
-// 1. Fungsi cek apakah sudah terinstal
+// Fungsi cek status instalasi
 function checkInstallation() {
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-    
-    if (isStandalone) {
-        console.log("🚀 App sudah terinstal (Standalone Mode)");
-        if (overlay) overlay.style.setProperty('display', 'none', 'important');
-        return true;
-    }
-    return false;
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+  if (isStandalone) {
+    console.log("🚀 Standalone Mode: Menyembunyikan semua prompt.");
+    hideAllPrompts();
+    return true;
+  }
+  return false;
 }
 
-// 2. Tangkap event install prompt
+// Tangkap event install
 window.addEventListener("beforeinstallprompt", (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
+  e.preventDefault();
+  deferredPrompt = e;
 
-    // Jika BELUM terinstal, tampilkan overlay full screen
-    if (!checkInstallation()) {
-        overlay.style.display = "flex";
-    }
+  // Tampilkan overlay jika belum terinstall
+  if (!checkInstallation()) {
+    overlay.style.display = "flex";
+  }
 });
 
-// 3. Fungsi eksekusi instalasi
+// Fungsi saat klik "Instal Sekarang"
 function installPWA() {
-    if (!deferredPrompt) return;
-
-    deferredPrompt.prompt();
-
-    deferredPrompt.userChoice.then((choiceResult) => {
-        if (choiceResult.outcome === "accepted") {
-            console.log("✅ User menginstall app");
-            hideOverlay();
-        }
-        deferredPrompt = null;
-    });
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then((choiceResult) => {
+    if (choiceResult.outcome === "accepted") {
+      console.log("✅ User menginstall");
+      hideAllPrompts();
+    }
+    deferredPrompt = null;
+  });
 }
 
+// Fungsi saat klik "Nanti Saja" (Tutup Overlay, Munculkan Banner)
 function hideOverlay() {
-    if (overlay) overlay.style.display = "none";
+  if (overlay) overlay.style.display = "none";
+  if (banner && !checkInstallation()) {
+    banner.style.display = "block"; // Munculkan tombol kecil di bawah
+  }
 }
 
-// 4. Sembunyikan jika berhasil diinstall lewat titik tiga browser
+function hideAllPrompts() {
+  if (overlay) overlay.style.display = "none";
+  if (banner) banner.style.display = "none";
+}
+
 window.addEventListener("appinstalled", () => {
-    hideOverlay();
+  hideAllPrompts();
 });
 
-// 5. Cek ulang saat halaman dimuat
-window.addEventListener('load', () => {
-    checkInstallation();
-});
+window.addEventListener('load', checkInstallation);
