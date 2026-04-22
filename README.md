@@ -7,6 +7,12 @@
 
 ---
 
+## 🌐 Akses Aplikasi Live
+**Cek aplikasi secara langsung di sini:**  
+👉 **[https://aplikasitokoakbarjaya.infinityfreeapp.com/](https://aplikasitokoakbarjaya.infinityfreeapp.com/)**
+
+---
+
 ## 👤 Identitas Mahasiswa
 | Data | Informasi |
 |------|-----------|
