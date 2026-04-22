@@ -91,26 +91,63 @@
             font-weight: 600;
         }
 
-        /* ✅ PWA Install Banner */
-        #pwa-banner {
-            display: none;
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #8b5cf6;
-            color: white;
-            padding: 12px 24px;
-            border-radius: 50px;
-            font-weight: 600;
-            box-shadow: 0 8px 25px rgba(139,92,246,0.4);
-            cursor: pointer;
-            z-index: 9999;
-            border: none;
-            font-size: 0.9rem;
-            animation: bounce 2s infinite;
-        }
+        #pwa-overlay {
+        display: none; /* Default sembunyi */
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(139, 92, 246, 0.95); /* Warna ungu tema kamu */
+        backdrop-filter: blur(15px);
+        z-index: 10000;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: white;
+        padding: 20px;
+    }
 
+    .install-box {
+        background: white;
+        color: #1a1a1a;
+        padding: 30px;
+        border-radius: 25px;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+        max-width: 400px;
+        width: 90%;
+    }
+
+    .install-box img {
+        width: 80px;
+        border-radius: 15px;
+        margin-bottom: 20px;
+    }
+
+    .btn-install-now {
+        background: #8b5cf6;
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 50px;
+        font-weight: 800;
+        width: 100%;
+        margin-top: 20px;
+        transition: transform 0.2s;
+    }
+
+    .btn-install-now:hover {
+        transform: scale(1.05);
+    }
+
+    .btn-later {
+        background: transparent;
+        border: none;
+        color: #666;
+        margin-top: 15px;
+        font-size: 0.8rem;
+        text-decoration: underline;
+    }
         @keyframes bounce {
             0%, 100% { transform: translateX(-50%) translateY(0); }
             50% { transform: translateX(-50%) translateY(-6px); }
@@ -172,9 +209,21 @@
 </div>
 
 <!-- ✅ Tombol Install PWA (muncul otomatis jika browser support) -->
-<button id="pwa-banner" onclick="installPWA()">
-    📲 Install Aplikasi Toko
-</button>
+<div id="pwa-overlay" style="display: none;">
+    <div class="install-box">
+        <img src="icons/icon-192x192.png" alt="Logo">
+        <h3 class="fw-bold">Instal Aplikasi Toko Akbar Jaya</h3>
+        <p class="text-muted">Dapatkan akses lebih cepat dan fitur offline dengan menginstal aplikasi ini di perangkat Anda.</p>
+        
+        <button class="btn-install-now" onclick="installPWA()">
+            INSTAL SEKARANG
+        </button>
+        
+        <button class="btn-later" onclick="hideOverlay()">
+            Nanti saja, buka di browser
+        </button>
+    </div>
+</div>
 
 <script src="app.js"></script>
 

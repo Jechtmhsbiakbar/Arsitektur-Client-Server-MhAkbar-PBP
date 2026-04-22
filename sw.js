@@ -1,4 +1,4 @@
-const CACHE_NAME = 'toko-pwa-v1';
+const CACHE_NAME = 'toko-pwa-v2';
 const urlsToCache = [
   './',
   './index.html',
@@ -45,17 +45,25 @@ self.addEventListener('activate', event => {
 // ============================================================
 // 3. TAHAP FETCH: Mencegat request. Jika offline, ambil dari Cache!
 // ============================================================
+// ============================================================
+// 3. TAHAP FETCH: Mencegat request. 
+// ============================================================
 self.addEventListener('fetch', event => {
+  // JIKA REQUEST ADALAH API (ke folder api-toko), JANGAN AMBIL DARI CACHE!
+  if (event.request.url.includes('api-toko')) {
+    return event.respondWith(
+      fetch(event.request).catch(() => {
+        // Opsi: Jika benar-benar offline, baru ambil dari cache atau berikan respon error
+        return caches.match(event.request);
+      })
+    );
+  }
+
+  // UNTUK FILE STATIS (HTML, CSS, JS, Gambar) Tetap gunakan Cache First
   event.respondWith(
     caches.match(event.request)
       .then(response => {
-        // Jika file ada di cache, kembalikan file tersebut (Offline Mode)
-        if (response) {
-          console.log('⚡ Dari cache:', event.request.url);
-          return response;
-        }
-        // Jika tidak ada, lanjutkan ambil dari internet (Online Mode)
-        return fetch(event.request);
+        return response || fetch(event.request);
       })
   );
 });

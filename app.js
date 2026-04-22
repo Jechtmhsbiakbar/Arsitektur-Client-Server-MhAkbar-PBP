@@ -1,4 +1,4 @@
-fetch("../api-toko/get_barang.php")
+fetch("api-toko/get_barang.php")
   .then((response) => response.json())
   .then((responseObject) => {
     const dataBarang = responseObject.data;
@@ -40,49 +40,63 @@ if ("serviceWorker" in navigator) {
   });
 }
 
+// ... kode fetch data barang tetap sama di sini ...
+
 // ============================================================
-// ✅ PWA: Tangkap event Install Prompt (tombol install)
+// ✅ LOGIKA CEK INSTALASI & DIALOG
 // ============================================================
+
 let deferredPrompt;
+const overlay = document.getElementById("pwa-overlay");
 
-window.addEventListener("beforeinstallprompt", (e) => {
-  // Tahan dulu prompt bawaan browser
-  e.preventDefault();
-  deferredPrompt = e;
-
-  // Tampilkan banner install custom
-  const banner = document.getElementById("pwa-banner");
-  if (banner) {
-    banner.style.display = "block";
-  }
-
-  console.log("📲 App siap diinstall sebagai PWA!");
-});
-
-// Fungsi dipanggil saat tombol banner diklik
-function installPWA() {
-  if (!deferredPrompt) return;
-
-  // Tampilkan dialog install bawaan browser
-  deferredPrompt.prompt();
-
-  deferredPrompt.userChoice.then((choiceResult) => {
-    if (choiceResult.outcome === "accepted") {
-      console.log("✅ Pengguna menyetujui instalasi PWA");
-    } else {
-      console.log("❌ Pengguna menolak instalasi PWA");
+// 1. Fungsi cek apakah sudah terinstal
+function checkInstallation() {
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+    
+    if (isStandalone) {
+        console.log("🚀 App sudah terinstal (Standalone Mode)");
+        if (overlay) overlay.style.setProperty('display', 'none', 'important');
+        return true;
     }
-    deferredPrompt = null;
-
-    // Sembunyikan banner setelah prompt
-    const banner = document.getElementById("pwa-banner");
-    if (banner) banner.style.display = "none";
-  });
+    return false;
 }
 
-// Saat app sudah terinstall
+// 2. Tangkap event install prompt
+window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+
+    // Jika BELUM terinstal, tampilkan overlay full screen
+    if (!checkInstallation()) {
+        overlay.style.display = "flex";
+    }
+});
+
+// 3. Fungsi eksekusi instalasi
+function installPWA() {
+    if (!deferredPrompt) return;
+
+    deferredPrompt.prompt();
+
+    deferredPrompt.userChoice.then((choiceResult) => {
+        if (choiceResult.outcome === "accepted") {
+            console.log("✅ User menginstall app");
+            hideOverlay();
+        }
+        deferredPrompt = null;
+    });
+}
+
+function hideOverlay() {
+    if (overlay) overlay.style.display = "none";
+}
+
+// 4. Sembunyikan jika berhasil diinstall lewat titik tiga browser
 window.addEventListener("appinstalled", () => {
-  console.log("🎉 Aplikasi Toko berhasil diinstall!");
-  const banner = document.getElementById("pwa-banner");
-  if (banner) banner.style.display = "none";
+    hideOverlay();
+});
+
+// 5. Cek ulang saat halaman dimuat
+window.addEventListener('load', () => {
+    checkInstallation();
 });

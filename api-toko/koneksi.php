@@ -1,8 +1,15 @@
 <?php
+// koneksi untuk localhost xampp
 $host = "localhost";
 $user = "root";
 $pass = "";
 $db   = "db_toko";
+
+// Koneksi untuk hosting infinityfree
+// $host = "sql104.infinityfree.com";
+// $user = "if0_41724973";
+// $pass = "WxMJqItMYH";
+// $db   = "if0_41724973_db_toko";
 
 $koneksi = mysqli_connect($host, $user, $pass, $db);
 

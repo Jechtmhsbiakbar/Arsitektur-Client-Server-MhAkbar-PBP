@@ -249,7 +249,7 @@ Content-Type: application/json
 
 **Client-Side Usage:**
 ```javascript
-fetch("../api-toko/get_barang.php")
+fetch("api-toko/get_barang.php")
   .then(response => response.json())
   .then(data => {
     if (data.status === "success") {
