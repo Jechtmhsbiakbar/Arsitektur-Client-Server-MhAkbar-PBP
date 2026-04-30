@@ -1,6 +1,6 @@
 {
   "name": "Toko Akbar Jaya",
-  "short_name": "AppToko",
+  "short_name": "Toko Akbar Jaya",
   "description": "Aplikasi pencatat barang PWA",
   "start_url": "index.html",
   "scope": "./",
