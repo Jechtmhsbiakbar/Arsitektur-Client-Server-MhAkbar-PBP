@@ -9,7 +9,14 @@
 
 ## 🌐 Akses Aplikasi Live
 **Cek aplikasi secara langsung di sini:**  
-👉 **[https://aplikasitokoakbarjaya.infinityfreeapp.com/](https://aplikasitokoakbarjaya.infinityfreeapp.com/)**
+👉 **[https://aplikasitokoakbarjaya.infinityfreeapp.com/](https://aplikasitokoakbarjaya.infinityfreeapp.com/) INI Tugas Ke 2**
+
+---
+
+## 🌐 Akses Aplikasi Live
+**Cek aplikasi secara langsung di sini:**  
+👉 **[https://tokoakbar.infinityfree.me/](https://aplikasitokoakbarjaya.infinityfreeapp.com/) INI Tugas Ke 3**
+
 
 ---
 
